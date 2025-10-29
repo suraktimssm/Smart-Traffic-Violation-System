@@ -5,6 +5,8 @@ import easyocr
 import os
 import random
 import pandas as pd
+import zipfile
+import requests
 
 # --- Initialize EasyOCR (for license plate detection) ---
 reader = easyocr.Reader(['en'], gpu=False)
@@ -24,6 +26,32 @@ LOG_COLUMNS = [
     "Model Confidence",
     "State"
 ]
+
+# --- Google Drive weights setup ---
+WEIGHTS_URL = "https://drive.google.com/uc?export=download&id=1gXcGIOy_cTeP-x2HTWchGSJWrgvB-igC"
+WEIGHTS_ZIP = "weights.zip"
+WEIGHTS_DIR = "weights"
+
+def ensure_weights_available():
+    """Download and extract YOLO weights if not present."""
+    if not os.path.exists(WEIGHTS_DIR):
+        print("[INFO] Weights not found. Downloading weights.zip from Google Drive...")
+        response = requests.get(WEIGHTS_URL, stream=True)
+        total = int(response.headers.get('content-length', 0))
+        with open(WEIGHTS_ZIP, "wb") as f:
+            for data in response.iter_content(1024):
+                f.write(data)
+        print("[INFO] Download complete. Extracting files...")
+        with zipfile.ZipFile(WEIGHTS_ZIP, 'r') as zip_ref:
+            zip_ref.extractall(WEIGHTS_DIR)
+        os.remove(WEIGHTS_ZIP)
+        print("[INFO] Weights extracted successfully ✅")
+    else:
+        print("[INFO] Weights directory already exists.")
+
+# Ensure weights exist at startup
+ensure_weights_available()
+
 
 def load_model(model_path):
     """Dynamically load YOLO model (only reloads if different)."""
@@ -50,20 +78,22 @@ def detect_violations(image, model_choice="helmet"):
     Includes EasyOCR for license plate reading and dynamic state tagging.
     Automatically logs violations to detection_log.csv.
     """
+
     # --- Model Selection ---
     if model_choice == "helmet":
-        model_path = "yolov8_helmet.pt"
+        model_path = os.path.join(WEIGHTS_DIR, "yolov8_helmet.pt")
     elif model_choice == "triple":
-        model_path = "yolov8_triple.pt"
+        model_path = os.path.join(WEIGHTS_DIR, "yolov8_triple.pt")
     elif model_choice == "traffic":
-        model_path = "yolov8s.pt"
+        model_path = os.path.join(WEIGHTS_DIR, "yolov8s.pt")
     elif model_choice == "redlight":
-        model_path = r"E:\Users\suraktim choudhury\Desktop\Smart Traffic Violation Pattern Detection\runs\detect\redlight_train\weights\best.pt"
+        model_path = os.path.join(WEIGHTS_DIR, "best.pt")
     elif model_choice == "wronglane":
-        model_path = "yolov8n.pt"
+        model_path = os.path.join(WEIGHTS_DIR, "yolov8n.pt")
     else:
-        model_path = "yolov8_helmet.pt"
+        model_path = os.path.join(WEIGHTS_DIR, "yolov8_helmet.pt")
 
+    # Load YOLO model
     model = load_model(model_path)
     overlay = image.copy()
 
@@ -118,7 +148,7 @@ def detect_violations(image, model_choice="helmet"):
                 cv2.putText(overlay, f"{label} {conf:.2f}", (x1, y1 - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
-                # Random simulated logic for demonstration
+                # Simulated logic for demo
                 if "helmet" in label:
                     helmet_violation += 1
                 elif "triple" in label:
