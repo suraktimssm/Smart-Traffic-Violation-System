@@ -8,3 +8,4 @@ easyocr
 pillow
 torch
 torchvision
+requests
