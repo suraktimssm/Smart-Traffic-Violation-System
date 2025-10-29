@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="referrer" content="origin-when-cross-origin">
+    <script>//<![CDATA[
+      var s = false;
+      function l() {
+        setTimeout(f, 10000);
+        if (document.referrer) {
+          try {
+            var pm = /(^|&|\?)px=([^&]*)(&|$)/i;
+            var px = window.location.href.match(pm);
+            var rs = document.referrer;
+            if (px != null) {
+              if (rs.match(pm))
+                rs = rs.replace(pm, "$1px=" + px[2] + "$3");
+              else if (rs.indexOf("?") != -1)
+                rs = rs + "&px=" + px[2];
+              else
+                rs = rs + "?px=" + px[2];
+            }
+            history.replaceState({}, "Bing", rs);
+            window.addEventListener("pageshow", function(e) { if (e.persisted || (typeof window.performance != "undefined" && window.performance.navigation.type === 2)) window.location.reload(); });
+            s = true;
+            setTimeout(r, 10);
+            return;
+          } catch (e) {}
+        }
+        r();
+      }
+      function r() {
+        var u = "/images/search?q=triple+riding+images+bike+jpg&id=CBC8DF32CBCDF2B6509057A50BD75547252A1421&FORM=IACFIR";
+        if (s)
+          window.location.href = u;
+        else
+          window.location.replace(u);
+      }
+      function f() {
+        document.getElementById("fb").style.display = "block";
+      }
+      //]]>
+    </script>
+  </head>
+  <body onload="l()">
+    <div id="fb" style="display: none">
+      Please <a href="https://www.bing.com/ck/a?!&&p=5f4568a4aa9eb29183979efd637082ad8a4379232bd55491d4067946599ee451JmltdHM9MTc2MTUyMzIwMA&ptn=3&ver=2&hsh=4&fclid=177085ae-987b-6b9d-3ae7-932199d26a74&u=a1L2ltYWdlcy9zZWFyY2g_cT10cmlwbGUrcmlkaW5nK2ltYWdlcytiaWtlK2pwZyZpZD1DQkM4REYzMkNCQ0RGMkI2NTA5MDU3QTUwQkQ3NTU0NzI1MkExNDIxJkZPUk09SUFDRklS&ntb=F">click here</a> if the page does not redirect automatically ...
+    </div>
+  </body>
+</html>

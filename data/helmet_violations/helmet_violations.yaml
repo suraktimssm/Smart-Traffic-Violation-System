@@ -1,0 +1,6 @@
+train: C:/Users/suraktim choudhury/Desktop/Smart Traffic Violation Pattern Detection/data/helmet_violations/train/images
+val: C:/Users/suraktim choudhury/Desktop/Smart Traffic Violation Pattern Detection/data/helmet_violations/valid/images
+test: C:/Users/suraktim choudhury/Desktop/Smart Traffic Violation Pattern Detection/data/helmet_violations/test/images
+
+nc: 3
+names: ['Plate', 'WithHelmet', 'WithoutHelmet']

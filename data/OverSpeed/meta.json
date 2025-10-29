@@ -1,0 +1,54 @@
+{
+    "classes": [
+        {
+            "title": "bus",
+            "shape": "rectangle",
+            "color": "#FF0200",
+            "geometry_config": {},
+            "id": 6488141,
+            "hotkey": ""
+        },
+        {
+            "title": "car",
+            "shape": "rectangle",
+            "color": "#8A290F",
+            "geometry_config": {},
+            "id": 6488139,
+            "hotkey": ""
+        },
+        {
+            "title": "motorbike",
+            "shape": "rectangle",
+            "color": "#00FCFF",
+            "geometry_config": {},
+            "id": 6488143,
+            "hotkey": ""
+        },
+        {
+            "title": "threewheel",
+            "shape": "rectangle",
+            "color": "#FF1DF2",
+            "geometry_config": {},
+            "id": 6488140,
+            "hotkey": ""
+        },
+        {
+            "title": "truck",
+            "shape": "rectangle",
+            "color": "#190F8A",
+            "geometry_config": {},
+            "id": 6488142,
+            "hotkey": ""
+        },
+        {
+            "title": "van",
+            "shape": "rectangle",
+            "color": "#0FFF00",
+            "geometry_config": {},
+            "id": 6488144,
+            "hotkey": ""
+        }
+    ],
+    "tags": [],
+    "projectType": "images"
+}

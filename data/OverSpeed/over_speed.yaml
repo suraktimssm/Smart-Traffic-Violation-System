@@ -1,0 +1,6 @@
+train: C:/Users/suraktim choudhury/Desktop/Smart Traffic Violation Pattern Detection/data/OverSpeed/train/images
+val: C:/Users/suraktim choudhury/Desktop/Smart Traffic Violation Pattern Detection/data/OverSpeed/valid/images
+test: C:/Users/suraktim choudhury/Desktop/Smart Traffic Violation Pattern Detection/data/OverSpeed/test/images
+
+nc: 3
+names: ['car', 'motorbike', 'truck']

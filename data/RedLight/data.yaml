@@ -1,0 +1,6 @@
+train: E:\Users\suraktim choudhury\Desktop\Smart Traffic Violation Pattern Detection\data\RedLight\train\images
+val: E:\Users\suraktim choudhury\Desktop\Smart Traffic Violation Pattern Detection\data\RedLight\valid\images
+test: E:\Users\suraktim choudhury\Desktop\Smart Traffic Violation Pattern Detection\data\RedLight\test\images
+
+nc: 4
+names: ['red_light', 'green_light', 'vehicle', 'violation']

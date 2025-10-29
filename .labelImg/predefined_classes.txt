@@ -1,0 +1,4 @@
+﻿red_light
+green_light
+vehicle
+violation

@@ -1,0 +1,5 @@
+train: C:/Users/suraktim choudhury/Desktop/Smart Traffic Violation Pattern Detection/data/TripleRiding/train/images
+val: C:/Users/suraktim choudhury/Desktop/Smart Traffic Violation Pattern Detection/data/TripleRiding/valid/images
+
+nc: 3
+names: ['with_helmet', 'without_helmet', 'triple_riding']
