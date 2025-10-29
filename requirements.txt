@@ -2,7 +2,7 @@ pandas
 numpy
 streamlit
 plotly
-opencv-python
+opencv-python-headless
 ultralytics
 easyocr
 pillow
