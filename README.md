@@ -23,7 +23,7 @@ To **assist traffic authorities** in identifying violators faster, **reduce huma
 | 📊 **Data Handling**      | Pandas, NumPy                                   |
 | 🗂️ **Storage / Dataset** | Custom Indian traffic violation dataset         |
 | 🔍 **Visualization**      | Matplotlib, Seaborn                             |
-| 🖥️ **Deployment**        | Render / Hugging Face        |
+| 🖥️ **Deployment**        | Render / Hugging Face / Streamlit Community Cloud       |
 
 ---
 
@@ -107,7 +107,7 @@ The dataset was preprocessed and labeled using **LabelImg**, and large training 
 🧠 **AI-Powered YOLOv8 Model** – Highly accurate, lightning-fast predictions.
 🧾 **Violation Log File** – Auto-generated CSV with timestamp and details.
 🎨 **Interactive UI** – Simple, modern interface built with Streamlit.
-🌐 **Deployable Anywhere** – Supports deployment on Hugging Face, Render, or Vercel.
+🌐 **Deployable Anywhere** – Supports deployment on Hugging Face, Render, or Streamlit Community Cloud.
 
 ---
 
@@ -144,17 +144,15 @@ pip install -r requirements.txt
 > **requirements.txt** includes:
 
 ```
-streamlit==1.32.0
 opencv-python-headless
-torch
-torchvision
+ultralytics
+easyocr
 pandas
 numpy
-ultralytics
-matplotlib
-seaborn
-Pillow
+plotly
+streamlit
 requests
+
 ```
 
 ---
@@ -214,7 +212,7 @@ streamlit run main.py
  ┣ 📁 data/                                      # Dataset files (CSV, images)
  ┣ 📁 train/, valid/, test/                      # YOLO labeled data (removed for size)
  ┣ 📁 runs/                                      # Training results (removed for size)
- ┣ 📜 app.py / main.py / dashboard.py            # Streamlit frontend
+ ┣ 📜 app.py / main.py /                         # Streamlit frontend
  ┣ 📜 detector.py                                # YOLOv8 model detection logic
  ┣ 📜 model_training.py                          # Model training script
  ┣ 📜 data_analysis.py                           # Analytics and visualization
