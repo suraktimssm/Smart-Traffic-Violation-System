@@ -9,6 +9,25 @@ import os
 import time
 import csv
 import random
+import os
+import subprocess
+
+# Make sure gdown is available
+subprocess.run(["pip", "install", "gdown"], check=False)
+
+# Google Drive model link (direct .pt)
+GOOGLE_DRIVE_URL = "https://drive.google.com/uc?export=download&id=1gXcGIOy_cTeP-x2HTWchGSJWrgvB-igC"
+WEIGHTS_DIR = "weights"
+WEIGHTS_PATH = os.path.join(WEIGHTS_DIR, "yolov8_helmet.pt")
+
+# Download model if not already present
+if not os.path.exists(WEIGHTS_PATH):
+    os.makedirs(WEIGHTS_DIR, exist_ok=True)
+    print("Downloading YOLO model weights from Google Drive...")
+    subprocess.run(["gdown", GOOGLE_DRIVE_URL, "-O", WEIGHTS_PATH], check=True)
+    print("✅ Weights downloaded successfully.")
+else:
+    print("✅ YOLO weights already available.")
 
 # --- CONFIG ---
 st.set_page_config(page_title="Smart Traffic Violation Dashboard", layout="wide")
