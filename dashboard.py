@@ -239,7 +239,7 @@ with col2:
     else:
         st.success("Model Loaded Successfully!")
         try:
-            df = pd.read_csv(LOG_CSV, on_bad_lines="skip", quoting=csv.QUOTE_NONE, engine="python").fillna(0)
+            df = pd.read_csv(LOG_CSV, dtype=str, on_bad_lines="skip", quoting=csv.QUOTE_NONE, engine="python").fillna(0)
             st.dataframe(df.tail(10))
         except Exception as e:
             st.warning(f"⚠️ Error reading log file: {e}")
@@ -250,7 +250,7 @@ if os.path.exists(LOG_CSV):
 
     # read CSV safely
     try:
-        df = pd.read_csv(LOG_CSV, on_bad_lines="skip", quoting=csv.QUOTE_NONE, engine="python").fillna(0)
+        df = pd.read_csv(LOG_CSV, dtype=str, on_bad_lines="skip", quoting=csv.QUOTE_NONE, engine="python").fillna(0)
     except Exception:
         df = pd.DataFrame(columns=LOG_COLUMNS)
 
