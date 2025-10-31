@@ -27,31 +27,50 @@ LOG_COLUMNS = [
 ]
 
 # --- Google Drive weights setup (Direct .pt download) ---
-WEIGHTS_URL = "https://drive.google.com/uc?export=download&id=1gXcGIOy_cTeP-x2HTWchGSJWrgvB-igC"
+DRIVE_LINKS = {
+    "helmet": "https://drive.google.com/uc?export=download&id=1-7-Ma6cfzq3QeRbe--wgJ_0tpE8tsj4-",
+    "triple": "https://drive.google.com/uc?export=download&id=1PwxPqoyeXTe_tnD7WvP39uRSxDuPWEkf",
+    "traffic": "https://drive.google.com/uc?export=download&id=1p1ed-F8LlB4502f0FVptP65pNBXn5BiL",
+    "redlight": "https://drive.google.com/uc?export=download&id=10XitgVNVo3p2ydFas3yZefQH-pK4t-3j",
+    "wronglane": "https://drive.google.com/uc?export=download&id=1GofcmHkj47TC8dCQeOGxmpzvb0T9IGql"
+}
+
 WEIGHTS_DIR = "weights"
-WEIGHTS_PATH = os.path.join(WEIGHTS_DIR, "yolov8_helmet.pt")
+if not os.path.exists(WEIGHTS_DIR):
+    os.makedirs(WEIGHTS_DIR, exist_ok=True)
 
-def ensure_weights_available():
-    """Ensure YOLO weights are available (direct .pt download, no zip)."""
-    if not os.path.exists(WEIGHTS_DIR):
-        os.makedirs(WEIGHTS_DIR, exist_ok=True)
+def ensure_weights_available(model_choice):
+    """Ensure YOLO weights are available (direct .pt download from Drive)."""
+    file_map = {
+        "helmet": "yolov8_helmet.pt",
+        "triple": "yolov8_triple.pt",
+        "traffic": "yolov8s.pt",
+        "redlight": "best.pt",
+        "wronglane": "yolov8n.pt"
+    }
 
-    if not os.path.exists(WEIGHTS_PATH):
-        print("[INFO] YOLO weights not found. Downloading from Google Drive...")
+    file_name = file_map.get(model_choice, "yolov8_helmet.pt")
+    file_path = os.path.join(WEIGHTS_DIR, file_name)
+
+    # Download only if not present or file too small
+    if not os.path.exists(file_path) or os.path.getsize(file_path) < 5_000_000:
+        print(f"[INFO] Downloading {file_name} from Google Drive...")
         try:
-            response = requests.get(WEIGHTS_URL, stream=True)
+            url = DRIVE_LINKS.get(model_choice)
+            if not url:
+                raise ValueError(f"No Drive link found for {model_choice}")
+
+            response = requests.get(url, stream=True)
             response.raise_for_status()
-            with open(WEIGHTS_PATH, "wb") as f:
+            with open(file_path, "wb") as f:
                 for chunk in response.iter_content(chunk_size=8192):
                     f.write(chunk)
-            print("[INFO] Weights downloaded successfully ✅")
+            print(f"[INFO] ✅ {file_name} downloaded successfully!")
         except Exception as e:
-            print(f"[ERROR] Failed to download YOLO weights: {e}")
+            print(f"[ERROR] ❌ Failed to download {file_name}: {e}")
     else:
-        print("[INFO] Weights already available ✅")
-
-# Ensure weights exist at startup
-ensure_weights_available()
+        print(f"[INFO] ✅ {file_name} already exists locally.")
+    return file_path
 
 
 def load_model(model_path):
@@ -80,16 +99,8 @@ def detect_violations(image, model_choice="helmet"):
     Automatically logs violations to detection_log.csv.
     """
 
-    # --- Model Selection ---
-    model_map = {
-        "helmet": os.path.join(WEIGHTS_DIR, "yolov8_helmet.pt"),
-        "triple": os.path.join(WEIGHTS_DIR, "yolov8_triple.pt"),
-        "traffic": os.path.join(WEIGHTS_DIR, "yolov8s.pt"),
-        "redlight": os.path.join(WEIGHTS_DIR, "best.pt"),
-        "wronglane": os.path.join(WEIGHTS_DIR, "yolov8n.pt")
-    }
-
-    model_path = model_map.get(model_choice, WEIGHTS_PATH)
+    # --- Ensure the selected model weight is available ---
+    model_path = ensure_weights_available(model_choice)
 
     # Load YOLO model
     model = load_model(model_path)
@@ -101,7 +112,6 @@ def detect_violations(image, model_choice="helmet"):
     overspeed = 0
     wrong_lane = 0
     red_light = 0
-    plate_texts = []
 
     # --- WRONG LANE DETECTION LOGIC ---
     if model_choice == "wronglane":
