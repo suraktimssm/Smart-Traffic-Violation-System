@@ -5,7 +5,6 @@ import easyocr
 import os
 import random
 import pandas as pd
-import zipfile
 import requests
 
 # --- Initialize EasyOCR (for license plate detection) ---
@@ -27,27 +26,29 @@ LOG_COLUMNS = [
     "State"
 ]
 
-# --- Google Drive weights setup ---
+# --- Google Drive weights setup (Direct .pt download) ---
 WEIGHTS_URL = "https://drive.google.com/uc?export=download&id=1gXcGIOy_cTeP-x2HTWchGSJWrgvB-igC"
-WEIGHTS_ZIP = "weights.zip"
 WEIGHTS_DIR = "weights"
+WEIGHTS_PATH = os.path.join(WEIGHTS_DIR, "yolov8_helmet.pt")
 
 def ensure_weights_available():
-    """Download and extract YOLO weights if not present."""
+    """Ensure YOLO weights are available (direct .pt download, no zip)."""
     if not os.path.exists(WEIGHTS_DIR):
-        print("[INFO] Weights not found. Downloading weights.zip from Google Drive...")
-        response = requests.get(WEIGHTS_URL, stream=True)
-        total = int(response.headers.get('content-length', 0))
-        with open(WEIGHTS_ZIP, "wb") as f:
-            for data in response.iter_content(1024):
-                f.write(data)
-        print("[INFO] Download complete. Extracting files...")
-        with zipfile.ZipFile(WEIGHTS_ZIP, 'r') as zip_ref:
-            zip_ref.extractall(WEIGHTS_DIR)
-        os.remove(WEIGHTS_ZIP)
-        print("[INFO] Weights extracted successfully ✅")
+        os.makedirs(WEIGHTS_DIR, exist_ok=True)
+
+    if not os.path.exists(WEIGHTS_PATH):
+        print("[INFO] YOLO weights not found. Downloading from Google Drive...")
+        try:
+            response = requests.get(WEIGHTS_URL, stream=True)
+            response.raise_for_status()
+            with open(WEIGHTS_PATH, "wb") as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+            print("[INFO] Weights downloaded successfully ✅")
+        except Exception as e:
+            print(f"[ERROR] Failed to download YOLO weights: {e}")
     else:
-        print("[INFO] Weights directory already exists.")
+        print("[INFO] Weights already available ✅")
 
 # Ensure weights exist at startup
 ensure_weights_available()
@@ -80,18 +81,15 @@ def detect_violations(image, model_choice="helmet"):
     """
 
     # --- Model Selection ---
-    if model_choice == "helmet":
-        model_path = os.path.join(WEIGHTS_DIR, "yolov8_helmet.pt")
-    elif model_choice == "triple":
-        model_path = os.path.join(WEIGHTS_DIR, "yolov8_triple.pt")
-    elif model_choice == "traffic":
-        model_path = os.path.join(WEIGHTS_DIR, "yolov8s.pt")
-    elif model_choice == "redlight":
-        model_path = os.path.join(WEIGHTS_DIR, "best.pt")
-    elif model_choice == "wronglane":
-        model_path = os.path.join(WEIGHTS_DIR, "yolov8n.pt")
-    else:
-        model_path = os.path.join(WEIGHTS_DIR, "yolov8_helmet.pt")
+    model_map = {
+        "helmet": os.path.join(WEIGHTS_DIR, "yolov8_helmet.pt"),
+        "triple": os.path.join(WEIGHTS_DIR, "yolov8_triple.pt"),
+        "traffic": os.path.join(WEIGHTS_DIR, "yolov8s.pt"),
+        "redlight": os.path.join(WEIGHTS_DIR, "best.pt"),
+        "wronglane": os.path.join(WEIGHTS_DIR, "yolov8n.pt")
+    }
+
+    model_path = model_map.get(model_choice, WEIGHTS_PATH)
 
     # Load YOLO model
     model = load_model(model_path)
