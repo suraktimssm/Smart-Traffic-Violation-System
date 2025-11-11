@@ -31,7 +31,7 @@ DRIVE_LINKS = {
     "helmet": "https://drive.google.com/uc?export=download&id=1-7-Ma6cfzq3QeRbe--wgJ_0tpE8tsj4-",
     "triple": "https://drive.google.com/uc?export=download&id=1PwxPqoyeXTe_tnD7WvP39uRSxDuPWEkf",
     "traffic": "https://drive.google.com/uc?export=download&id=1p1ed-F8LlB4502f0FVptP65pNBXn5BiL",
-    "redlight": "https://drive.google.com/uc?export=download&id=10XitgVNVo3p2ydFas3yZefQH-pK4t-3j",
+    "redlight": "https://drive.google.com/uc?export=download&id=1p1ed-F8LlB4502f0FVptP65pNBXn5BiL",
     "wronglane": "https://drive.google.com/uc?export=download&id=1GofcmHkj47TC8dCQeOGxmpzvb0T9IGql"
 }
 
